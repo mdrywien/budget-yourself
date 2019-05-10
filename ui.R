@@ -29,9 +29,8 @@ dashboardPage(
                     actionButton("loadFile", "Load the File")
                 ),
                 box(width = 5,
-                    textOutput("tab1_text"),
+                    uiOutput("tab1_filters"),
                     br(), br(),
-                    uiOutput("tab1_date_range"),
                     actionButton("filterData", "Let's filter that")
                 )
                 )

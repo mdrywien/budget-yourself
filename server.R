@@ -20,24 +20,25 @@ shinyServer(function(input, output) {
 
 # TAB 1 - DEFINE DATA -----------------------------------------------------
 
-output$tab1_text = renderText({
+output$tab1_filters = renderUI({
   req(input$loadFile)
   min_date = min(loadedData()$Data_transakcji)
   max_date = max(loadedData()$Data_transakcji)
-  paste0("Your data starts on ", min_date, " and lasts til ", max_date, ". Do you want to filter these dates?")
-})
-
-output$tab1_date_range = renderUI({
-  req(input$loadFile)
-  min_date = min(loadedData()$Data_transakcji)
-  max_date = max(loadedData()$Data_transakcji)
-  dateRangeInput("tab1_dates", label = "Date range input",
-                 start = min_date, end = max_date, weekstart = 1)
+  tagList(
+    paste0("Your data starts on ", min_date, " and lasts til ", max_date, ". Do you want to filter these dates?"),
+    dateRangeInput("tab1_dates", label = "Date range input",
+                   start = min_date, end = max_date, weekstart = 1),
+    br(), br(),
+    paste0("You have ", length(unique(loadedData()$Konto)), " different accounts. Want to filter out some?"),
+    selectizeInput("tab1_accounts", label = "Select accounts to analyze", 
+                   choices = unique(loadedData()$Konto), multiple = TRUE)
+    )
 })
 
 modifiedData = reactive({
   loadedData() %>%
-    filter((Data_transakcji >= input$tab1_dates[1]) & (Data_transakcji <= input$tab1_dates[2]))
+    filter((Data_transakcji >= input$tab1_dates[1]) & (Data_transakcji <= input$tab1_dates[2])) %>%
+    filter(Konto %in% input$tab1_accounts)
 })
   
 # TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------
