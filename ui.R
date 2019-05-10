@@ -22,14 +22,19 @@ dashboardPage(
 # TAB 1 - HOME ------------------------------------------------------------
       tabItem(tabName = "home",
               fluidRow(
-                
+                box(width = 3,
+                    fileInput("file", "Choose a data file to upload:", 
+                              accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
+                    numericInput("skipRows", "How many rows to skip", min = 0, value = 0, step = 1),
+                    actionButton("loadFile", "Load the File")
+                )
                 )
       ),
 
 # TAB2 - LABELS -----------------------------------------------------------
       tabItem(tabName = "categorize",
               fluidRow(
-                  box(
+                  box(width = 10,
                     title = "Label your transactions",
                     rHandsontableOutput("tab2_hot_table")
                   )
@@ -39,7 +44,7 @@ dashboardPage(
 # TAB3 - SPEND ------------------------------------------------------------
       tabItem(tabName = "spend",
               fluidRow(
-                box(
+                box(width = 10,
                   title = "All transactions",
                   DT::dataTableOutput("tab3_main_table"),
                   plotlyOutput("tab3_bar_plot")

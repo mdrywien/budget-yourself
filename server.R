@@ -6,10 +6,18 @@ shinyServer(function(input, output) {
 # DATA LOAD ---------------------------------------------------------------
 
   loadedData = reactive({
-    data = read.csv("data/sample.csv")
-    data
+    inFile = input$file
+    if (is.null(input$loadFile)){return(NULL)}
+    isolate({ 
+      input$Load
+      my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows)
+      colnames(my_data) = fixColnames(colnames(my_data))
+      my_data = my_data %>%
+        select(Data_transakcji, Dane_kontrahenta, Tytul, Szczegoly, Kwota_transakcji_waluta_rachunku_, Konto) %>%
+        filter(Szczegoly != "")
+    })
+    my_data
   })
- 
 
 # TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------
 
@@ -28,7 +36,7 @@ shinyServer(function(input, output) {
 
 # TAB 3 - SUMMARIZE SPEND ---------------------------------------------------------
    
-  output$tab3_main_table <- DT::renderDataTable({
+  output$tab3_main_table = DT::renderDataTable({
     DT::datatable(hotTable(), options = list(pageLength = 15, scrollX = TRUE))
   })
   
