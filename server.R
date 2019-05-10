@@ -11,10 +11,9 @@ shinyServer(function(input, output) {
     isolate({ 
       input$Load
       my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows)
-      colnames(my_data) = fixColnames(colnames(my_data))
-      my_data = my_data %>%
-        select(Data_transakcji, Dane_kontrahenta, Tytul, Szczegoly, Kwota_transakcji_waluta_rachunku_, Konto) %>%
-        filter(Szczegoly != "")
+      cols = colnames(my_data)
+      colnames(my_data) = fixColnames(cols)
+      my_data = filterInitialData(my_data)
     })
     my_data
   })
@@ -37,13 +36,13 @@ shinyServer(function(input, output) {
 # TAB 3 - SUMMARIZE SPEND ---------------------------------------------------------
    
   output$tab3_main_table = DT::renderDataTable({
-    DT::datatable(hotTable(), options = list(pageLength = 15, scrollX = TRUE))
+    df = groupDataByCat(hotTable())
+    DT::datatable(df, options = list(pageLength = 15, scrollX = TRUE))
   })
   
   output$tab3_bar_plot = renderPlotly({
-    hotTable() %>%
-      group_by(category) %>%
-      summarise(total_spend = sum(amount)) %>%
+    df = groupDataByCat(hotTable())
+    df %>%
       plot_ly(x = ~category, y = ~total_spend, type = "bar")
   })
  
