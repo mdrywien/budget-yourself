@@ -7,13 +7,13 @@ shinyServer(function(input, output) {
 
   loadedData = reactive({
     data = read.csv("data/sample.csv")
-    b
+    data
   })
  
 
-# ADD LABELS TO SPEND -----------------------------------------------------
+# TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------
 
-  output$secTable = renderRHandsontable({
+  output$tab2_hot_table = renderRHandsontable({
     df = 
       loadedData() %>%
       mutate(category = "")
@@ -21,12 +21,22 @@ shinyServer(function(input, output) {
   })
   
   hotTable = reactive({
-    req(input$secTable)
-    hot_to_r(input$secTable)
+    req(input$tab2_hot_table)
+    hot_to_r(input$tab2_hot_table)
   })
+  
+
+# TAB 3 - SUMMARIZE SPEND ---------------------------------------------------------
    
-  output$mainTable <- DT::renderDataTable({
+  output$tab3_main_table <- DT::renderDataTable({
     DT::datatable(hotTable(), options = list(pageLength = 15, scrollX = TRUE))
+  })
+  
+  output$tab3_bar_plot = renderPlotly({
+    hotTable() %>%
+      group_by(category) %>%
+      summarise(total_spend = sum(amount)) %>%
+      plot_ly(x = ~category, y = ~total_spend, type = "bar")
   })
  
   

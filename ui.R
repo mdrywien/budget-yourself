@@ -29,14 +29,21 @@ dashboardPage(
 # TAB2 - LABELS -----------------------------------------------------------
       tabItem(tabName = "categorize",
               fluidRow(
-                
+                  box(
+                    title = "Label your transactions",
+                    rHandsontableOutput("tab2_hot_table")
+                  )
               )
       ),
 
 # TAB3 - SPEND ------------------------------------------------------------
       tabItem(tabName = "spend",
               fluidRow(
-                
+                box(
+                  title = "All transactions",
+                  DT::dataTableOutput("tab3_main_table"),
+                  plotlyOutput("tab3_bar_plot")
+                )
               )
       ),
 
