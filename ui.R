@@ -27,6 +27,12 @@ dashboardPage(
                               accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
                     numericInput("skipRows", "How many rows to skip", min = 0, value = 0, step = 1),
                     actionButton("loadFile", "Load the File")
+                ),
+                box(width = 5,
+                    textOutput("tab1_text"),
+                    br(), br(),
+                    uiOutput("tab1_date_range"),
+                    actionButton("filterData", "Let's filter that")
                 )
                 )
       ),
@@ -44,10 +50,9 @@ dashboardPage(
 # TAB3 - SPEND ------------------------------------------------------------
       tabItem(tabName = "spend",
               fluidRow(
-                box(width = 10,
-                  title = "All transactions",
-                  DT::dataTableOutput("tab3_main_table"),
-                  plotlyOutput("tab3_bar_plot")
+                column(width = 10,
+                  box(title = "Transactions by date", width = NULL, DT::dataTableOutput("tab3_main_table")),
+                  box(title = "Spend by category", width = NULL, plotlyOutput("tab3_bar_plot"))
                 )
               )
       ),
