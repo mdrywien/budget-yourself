@@ -31,6 +31,11 @@ groupDataByCat = function(data) {
   return(grouped_data)
 }
 
+processTransactionTypes = function(data) {
+  data$Szczegoly = str_replace_all(data$Szczegoly, "([^[:alpha:]])", "")
+  return(data)
+}
+
 
 
 

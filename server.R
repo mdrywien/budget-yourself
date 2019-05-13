@@ -14,6 +14,7 @@ shinyServer(function(input, output) {
       cols = colnames(my_data)
       colnames(my_data) = fixColnames(cols)
       my_data = filterInitialData(my_data)
+      my_data = processTransactionTypes(my_data)
     })
     my_data
   })
@@ -28,17 +29,35 @@ output$tab1_filters = renderUI({
     paste0("Your data starts on ", min_date, " and lasts til ", max_date, ". Do you want to filter these dates?"),
     dateRangeInput("tab1_dates", label = "Date range input",
                    start = min_date, end = max_date, weekstart = 1),
-    br(), br(),
+    br(),
     paste0("You have ", length(unique(loadedData()$Konto)), " different accounts. Want to filter out some?"),
     selectizeInput("tab1_accounts", label = "Select accounts to analyze", 
-                   choices = unique(loadedData()$Konto), multiple = TRUE)
+                   choices = unique(loadedData()$Konto), multiple = TRUE),
+    br(),
+    paste0("Your transactions include ", length(unique(loadedData()$Szczegoly)), " different types. Try them."),
+    selectizeInput("tab1_types", label = "Select transaction types to analyze",
+                   choices = unique(loadedData()$Szczegoly), multiple = TRUE)
     )
 })
 
 modifiedData = reactive({
+  req(input$tab1_dates, input$tab1_accounts, input$tab1_types)
   loadedData() %>%
     filter((Data_transakcji >= input$tab1_dates[1]) & (Data_transakcji <= input$tab1_dates[2])) %>%
-    filter(Konto %in% input$tab1_accounts)
+    filter(Konto %in% input$tab1_accounts) %>%
+    filter(Szczegoly %in% input$tab1_types)
+})
+
+output$tab1_done = renderUI({
+  req(input$filterData)
+  if((min(modifiedData()$Data_transakcji) == input$tab1_dates[1])
+     & (max(modifiedData()$Data_transakcji) == input$tab1_dates[2])
+     & (all(modifiedData()$Konto %in% input$tab1_accounts))
+     & (all(modifiedData()$Szczegoly %in% input$tab1_types))) {
+    img(src = "done.png", align = "left", width = "100px")
+  } else {
+    NULL
+  }
 })
   
 # TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------

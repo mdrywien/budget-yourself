@@ -2,6 +2,8 @@ source("pre.R")
 
 library(shinydashboard)
 
+
+
 dashboardPage(
   dashboardHeader(
     title = "BudgetYourself"
@@ -25,13 +27,15 @@ dashboardPage(
                 box(width = 3,
                     fileInput("file", "Choose a data file to upload:", 
                               accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
-                    numericInput("skipRows", "How many rows to skip", min = 0, value = 0, step = 1),
+                    numericInput("skipRows", "How many rows to skip", min = 0, value = 21, step = 1),
                     actionButton("loadFile", "Load the File")
                 ),
                 box(width = 5,
                     uiOutput("tab1_filters"),
-                    br(), br(),
-                    actionButton("filterData", "Let's filter that")
+                    br(),
+                    actionButton("filterData", "Let's filter that"),
+                    br(),
+                    uiOutput("tab1_done")
                 )
                 )
       ),
