@@ -15,6 +15,11 @@ shinyServer(function(input, output) {
       colnames(my_data) = fixColnames(cols)
       my_data = filterInitialData(my_data)
       my_data = processTransactionTypes(my_data)
+      if(input$tab1_delete_lines == "Yes") {
+        my_data = deleteMutualLines(my_data)
+      } else {
+        my_data
+      }
     })
     my_data
   })

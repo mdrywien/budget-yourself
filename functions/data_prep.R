@@ -45,7 +45,7 @@ deleteMutualLines = function(data) {
     filter(Konto.x != Konto.y) %>%
     select(id.x)
   to_delete = to_delete[,1]
-  wo_dups = d %>% filter(!id %in% to_delete)
+  wo_dups = d %>% filter(!id %in% to_delete) %>% select(-id)
   return(wo_dups)
 }
 

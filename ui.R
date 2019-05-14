@@ -28,6 +28,10 @@ dashboardPage(
                     fileInput("file", "Choose a data file to upload:", 
                               accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
                     numericInput("skipRows", "How many rows to skip", min = 0, value = 21, step = 1),
+                    br(),
+                    radioButtons("tab1_delete_lines", "Delete mutal lines?", choices = c("Yes", "No"),
+                                 inline = TRUE, selected = "No"),
+                    br(),
                     actionButton("loadFile", "Load the File")
                 ),
                 box(width = 5,
