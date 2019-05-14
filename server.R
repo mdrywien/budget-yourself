@@ -142,10 +142,19 @@ output$tab1_sum_out_box = renderValueBox({
     DT::datatable(df, options = list(pageLength = 15, scrollX = TRUE))
   })
   
-  output$tab3_bar_plot = renderPlotly({
+  output$tab3_pie = renderPlotly({
     df = groupDataByCat(categorizedData())
     df %>%
-      plot_ly(x = ~category, y = ~total_spend, type = "bar")
+      mutate(abs_spend = abs(total_spend)) %>%
+      plot_ly(labels = ~category, values = ~abs_spend, textinfo = "percent") %>%
+      add_pie(hole = 0.3)
+  })
+  
+  output$tab3_line = renderPlotly({
+    df = groupDataByCat(categorizedData())
+    df %>%
+      mutate(abs_spend = abs(total_spend)) %>%
+      plot_ly(x = ~Data_transakcji, y = ~abs_spend, type = "line")
   })
  
   

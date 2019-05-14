@@ -81,7 +81,7 @@ dashboardPage(
               fluidRow(
                 column(width = 10,
                   box(title = "Transactions by date", width = NULL, DT::dataTableOutput("tab3_main_table")),
-                  box(title = "Spend by category", width = NULL, plotlyOutput("tab3_bar_plot"))
+                  box(title = "Spend by category", width = NULL, plotlyOutput("tab3_pie"), plotlyOutput("tab3_line"))
                 )
               )
       ),
