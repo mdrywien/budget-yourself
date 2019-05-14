@@ -6,10 +6,9 @@ shinyServer(function(input, output) {
 # DATA LOAD ---------------------------------------------------------------
 
   loadedData = reactive({
-    inFile = input$file
-    if (is.null(input$loadFile)){return(NULL)}
+    input$loadFile
     isolate({ 
-      input$loadFile
+      inFile = input$file
       my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows)
       cols = colnames(my_data)
       colnames(my_data) = fixColnames(cols)
@@ -86,6 +85,26 @@ output$tab1_sum_out_box = renderValueBox({
   
 # TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------
 
+  loadedCategorizedData = reactive({
+    input$tab2_load_file
+    isolate({ 
+      inFile = input$tab2_file
+      my_data = read.csv(inFile$datapath, stringsAsFactors = FALSE)
+    })
+    my_data
+  })
+
+  output$tab2_data_table = renderRHandsontable({
+    input$tab2_load_file
+    isolate({
+      req(input$tab2_file)
+      df = 
+        loadedCategorizedData() %>%
+        rhandsontable(width = 1200, height = 900) %>%
+        hot_cols(colWidths = 150)
+    })
+  })
+
   output$tab2_hot_table = renderRHandsontable({
     df = 
       modifiedData() %>%
@@ -102,20 +121,29 @@ output$tab1_sum_out_box = renderValueBox({
   output$tab2_download = downloadHandler(
     filename = function() {"categ_data.csv"},
     content = function(fname) {
-      write.csv(hotTable(), fname)
+      write.csv(hotTable(), fname, row.names = FALSE)
     }
   )
   
 
 # TAB 3 - SUMMARIZE SPEND ---------------------------------------------------------
    
+  categorizedData = reactive({
+    if(input$tab2_data_source == "Yes") {
+      data = loadedCategorizedData()
+    } else if(input$tab2_data_source == "No") {
+     data = hotTable()
+    }
+    data
+  })
+  
   output$tab3_main_table = DT::renderDataTable({
-    df = groupDataByCat(hotTable())
+    df = groupDataByCat(categorizedData())
     DT::datatable(df, options = list(pageLength = 15, scrollX = TRUE))
   })
   
   output$tab3_bar_plot = renderPlotly({
-    df = groupDataByCat(hotTable())
+    df = groupDataByCat(categorizedData())
     df %>%
       plot_ly(x = ~category, y = ~total_spend, type = "bar")
   })

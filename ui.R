@@ -24,7 +24,7 @@ dashboardPage(
 # TAB 1 - HOME ------------------------------------------------------------
       tabItem(tabName = "home",
               fluidRow(
-                box(width = 3,
+                box(width = 2,
                     fileInput("file", "Choose a data file to upload:", 
                               accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
                     numericInput("skipRows", "How many rows to skip", min = 0, value = 21, step = 1),
@@ -41,7 +41,7 @@ dashboardPage(
                     br(),
                     uiOutput("tab1_done")
                 ),
-                box(width = 4,
+                box(width = 5,
                     valueBoxOutput("tab1_sum_in_box"),
                     valueBoxOutput("tab1_sum_out_box"))
                 )
@@ -50,12 +50,29 @@ dashboardPage(
 # TAB2 - LABELS -----------------------------------------------------------
       tabItem(tabName = "categorize",
               fluidRow(
-                  box(width = 10,
-                    title = "Label your transactions",
-                    downloadButton("tab2_download", "Download data"),
-                    br(),
-                    rHandsontableOutput("tab2_hot_table")
-                  )
+                column(width = 10,
+                       box(
+                         width = NULL,
+                         title = "Options",
+                         downloadButton("tab2_download", "Download data"),
+                         br(), br(),
+                         radioButtons("tab2_data_source", "Do you want to load categorized data from file?", 
+                                      choices = c("Yes", "No"), inline = TRUE, selected = "No"),
+                         conditionalPanel(condition = "input.tab2_data_source == 'Yes'",
+                                          fileInput("tab2_file", "Choose a data file to upload:", 
+                                                    accept = c("text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain", ".csv",".tsv")), 
+                                          actionButton("tab2_load_file", "Load the File"))
+                       ),
+                       box(
+                         width = NULL,
+                         title = "Label your transactions",
+                         br(),
+                         conditionalPanel(condition = "input.tab2_data_source == 'Yes'",
+                                          rHandsontableOutput("tab2_data_table")),
+                         conditionalPanel(condition = "input.tab2_data_source == 'No'",
+                                          rHandsontableOutput("tab2_hot_table"))
+                       )
+                       )
               )
       ),
 
