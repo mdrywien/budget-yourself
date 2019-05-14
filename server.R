@@ -41,23 +41,42 @@ output$tab1_filters = renderUI({
 })
 
 modifiedData = reactive({
-  req(input$tab1_dates, input$tab1_accounts, input$tab1_types)
-  loadedData() %>%
-    filter((Data_transakcji >= input$tab1_dates[1]) & (Data_transakcji <= input$tab1_dates[2])) %>%
-    filter(Konto %in% input$tab1_accounts) %>%
-    filter(Szczegoly %in% input$tab1_types)
+  input$filterData
+  isolate({
+    req(input$tab1_dates, input$tab1_accounts, input$tab1_types)
+    loadedData() %>%
+      filter((Data_transakcji >= input$tab1_dates[1]) & (Data_transakcji <= input$tab1_dates[2])) %>%
+      filter(Konto %in% input$tab1_accounts) %>%
+      filter(Szczegoly %in% input$tab1_types)
+  })
 })
 
 output$tab1_done = renderUI({
-  req(input$filterData)
-  if((min(modifiedData()$Data_transakcji) == input$tab1_dates[1])
-     & (max(modifiedData()$Data_transakcji) == input$tab1_dates[2])
-     & (all(modifiedData()$Konto %in% input$tab1_accounts))
-     & (all(modifiedData()$Szczegoly %in% input$tab1_types))) {
-    img(src = "done.png", align = "left", width = "100px")
-  } else {
-    NULL
-  }
+  input$filterData
+  isolate({
+    if((min(modifiedData()$Data_transakcji) >= input$tab1_dates[1])
+       & (max(modifiedData()$Data_transakcji) <= input$tab1_dates[2])
+       & (all(modifiedData()$Konto %in% input$tab1_accounts))
+       & (all(modifiedData()$Szczegoly %in% input$tab1_types))) {
+      img(src = "done.png", align = "left", width = "100px")
+    } else {
+      NULL
+    }
+  })
+})
+
+output$tab1_sum_in_box = renderValueBox({
+  valueBox(
+    paste0(sumIn(modifiedData())), "Income", icon = icon("arrow-up"),
+    color = "green"
+  )
+})
+
+output$tab1_sum_out_box = renderValueBox({
+  valueBox(
+    paste0(sumOut(modifiedData())), "Spend", icon = icon("arrow-down"),
+    color = "red"
+  )
 })
   
 # TAB 2 - ADD LABELS TO SPEND -----------------------------------------------------
@@ -74,6 +93,13 @@ output$tab1_done = renderUI({
     req(input$tab2_hot_table)
     hot_to_r(input$tab2_hot_table)
   })
+  
+  output$tab2_download = downloadHandler(
+    filename = function() {"categ_data.csv"},
+    content = function(fname) {
+      write.csv(hotTable(), fname)
+    }
+  )
   
 
 # TAB 3 - SUMMARIZE SPEND ---------------------------------------------------------

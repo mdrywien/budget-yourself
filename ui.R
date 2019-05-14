@@ -36,7 +36,10 @@ dashboardPage(
                     actionButton("filterData", "Let's filter that"),
                     br(),
                     uiOutput("tab1_done")
-                )
+                ),
+                box(width = 4,
+                    valueBoxOutput("tab1_sum_in_box"),
+                    valueBoxOutput("tab1_sum_out_box"))
                 )
       ),
 
@@ -45,6 +48,8 @@ dashboardPage(
               fluidRow(
                   box(width = 10,
                     title = "Label your transactions",
+                    downloadButton("tab2_download", "Download data"),
+                    br(),
                     rHandsontableOutput("tab2_hot_table")
                   )
               )

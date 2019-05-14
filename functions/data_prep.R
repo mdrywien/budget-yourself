@@ -36,6 +36,29 @@ processTransactionTypes = function(data) {
   return(data)
 }
 
+deleteMutualLines = function(data) {
+  d = data %>% mutate(id = row_number())
+  d1 = d %>% mutate(Kwota_transakcji_waluta_rachunku_ = Kwota_transakcji_waluta_rachunku_*(-1))
+  to_delete = 
+    d %>% 
+    inner_join(d1, by = c("Data_transakcji", "Kwota_transakcji_waluta_rachunku_")) %>% 
+    filter(Konto.x != Konto.y) %>%
+    select(id.x)
+  to_delete = to_delete[,1]
+  wo_dups = d %>% filter(!id %in% to_delete)
+  return(wo_dups)
+}
 
+sumIn = function(data) {
+  data_to_sum = deleteMutualLines(data)
+  pos_data = data_to_sum %>% filter(Kwota_transakcji_waluta_rachunku_ >= 0)
+  in_sum = sum(pos_data$Kwota_transakcji_waluta_rachunku_)
+  return(in_sum)
+}
 
-
+sumOut = function(data) {
+  data_to_sum = deleteMutualLines(data)
+  neg_data = data_to_sum %>% filter(Kwota_transakcji_waluta_rachunku_ < 0)
+  out_sum = sum(neg_data$Kwota_transakcji_waluta_rachunku_)
+  return(out_sum)
+}
