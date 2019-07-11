@@ -32,6 +32,8 @@ dashboardPage(
                     radioButtons("tab1_delete_lines", "Delete mutal lines?", choices = c("Yes", "No"),
                                  inline = TRUE, selected = "No"),
                     br(),
+                    textInput("fileEncoding", "Choose file encoding", value = "WINDOWS-1250"),
+                    br(),
                     actionButton("loadFile", "Load the File")
                 ),
                 box(width = 5,

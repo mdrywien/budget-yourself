@@ -5,8 +5,8 @@ fixColnames = function(cols) {
     str_replace_all(
       str_replace_all(
         str_replace_all(
-          str_replace_all(cols, "ê", "e"),
-          "³", "l"),
+          str_replace_all(cols, "e", "e"),
+          "l", "l"),
         "ó", "o"),
       "\\.{2}", "."),
     "[[:punct:]]", "_")

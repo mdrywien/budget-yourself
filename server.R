@@ -9,7 +9,8 @@ shinyServer(function(input, output) {
     input$loadFile
     isolate({ 
       inFile = input$file
-      my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows)
+      my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows,
+                          fileEncoding = input$fileEncoding)
       cols = colnames(my_data)
       colnames(my_data) = fixColnames(cols)
       my_data = filterInitialData(my_data)
