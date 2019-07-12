@@ -6,11 +6,11 @@ shinyServer(function(input, output) {
 # DATA LOAD ---------------------------------------------------------------
 
   loadedData = reactive({
-    input$loadFile
+    input$tab1_load_file_button
     isolate({ 
-      inFile = input$file
-      my_data = read.csv2(inFile$datapath, stringsAsFactors = FALSE, skip = input$skipRows,
-                          fileEncoding = input$fileEncoding)
+      in_file = input$tab1_file_to_upload
+      my_data = read.csv2(in_file$datapath, stringsAsFactors = FALSE, skip = input$tab1_skip_rows,
+                          fileEncoding = input$tab1_file_encoding)
       cols = colnames(my_data)
       colnames(my_data) = fixColnames(cols)
       my_data = filterInitialData(my_data)
@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
 # TAB 1 - DEFINE DATA -----------------------------------------------------
 
 output$tab1_filters = renderUI({
-  req(input$loadFile)
+  req(input$tab1_load_file_button)
   min_date = min(loadedData()$Data_transakcji)
   max_date = max(loadedData()$Data_transakcji)
   tagList(
@@ -46,7 +46,7 @@ output$tab1_filters = renderUI({
 })
 
 modifiedData = reactive({
-  input$filterData
+  input$tab1_filter_data_button
   isolate({
     req(input$tab1_dates, input$tab1_accounts, input$tab1_types)
     loadedData() %>%
@@ -57,7 +57,7 @@ modifiedData = reactive({
 })
 
 output$tab1_done = renderUI({
-  input$filterData
+  input$tab1_filter_data_button
   isolate({
     if((min(modifiedData()$Data_transakcji) >= input$tab1_dates[1])
        & (max(modifiedData()$Data_transakcji) <= input$tab1_dates[2])
