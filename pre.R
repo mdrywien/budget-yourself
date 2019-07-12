@@ -1,9 +1,12 @@
-library(shiny)
-library(shinydashboard)
-library(DT)
-library(dplyr)
-library(rhandsontable)
-library(plotly)
-library(tidyr)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  shiny,
+  shinydashboard,
+  DT,
+  dplyr,
+  rhandsontable,
+  plotly,
+  tidyr,
+  glue)
 
 source("functions/data_prep.R")
