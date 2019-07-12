@@ -1,18 +1,20 @@
-library(stringr)
-
-fixColnames = function(cols) {
-  cols_fixed = str_replace_all(
+## fixColnames ##
+# Replace polish letters and dots
+fixColnames = function(columns) {
+  columns_fixed = str_replace_all(
     str_replace_all(
       str_replace_all(
         str_replace_all(
-          str_replace_all(cols, "e", "e"),
+          str_replace_all(columns, "e", "e"),
           "l", "l"),
         "ó", "o"),
       "\\.{2}", "."),
     "[[:punct:]]", "_")
-  return(cols_fixed)
+  return(columns_fixed)
 }
 
+## filterInitialData ##
+# Select needed columns and filter blank transactions
 filterInitialData = function(data) {
   filtered_data =
     data %>%

@@ -155,7 +155,10 @@ output$tab1_sum_out_box = renderValueBox({
     df = groupDataByCat(categorizedData())
     df %>%
       mutate(abs_spend = abs(total_spend)) %>%
-      plot_ly(x = ~Data_transakcji, y = ~abs_spend, type = "scatter", mode = "line", color = ~category)
+      group_by(category) %>%
+      arrange(Data_transakcji) %>%
+      mutate(window_abs_spend = cumsum(abs_spend)) %>%
+      plot_ly(x = ~Data_transakcji, y = ~window_abs_spend, type = "scatter", mode = "line", color = ~category)
   })
  
   

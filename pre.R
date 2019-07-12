@@ -7,6 +7,7 @@ pacman::p_load(
   rhandsontable,
   plotly,
   tidyr,
-  glue)
+  glue,
+  stringr)
 
 source("functions/data_prep.R")
