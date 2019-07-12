@@ -120,7 +120,7 @@ output$tab1_sum_out_box = renderValueBox({
   })
   
   output$tab2_download_button = downloadHandler(
-    filename = function() {"categorized_data.csv"},
+    filename = function() {glue(as.character.Date(Sys.Date()), "_categorized_data.csv")},
     content = function(fname) {
       write.csv(hotCategorizedTable(), fname, row.names = FALSE)
     }
