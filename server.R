@@ -89,16 +89,16 @@ output$tab1_sum_out_box = renderValueBox({
   loadedCategorizedData = reactive({
     input$tab2_load_file
     isolate({ 
-      inFile = input$tab2_file
-      my_data = read.csv(inFile$datapath, stringsAsFactors = FALSE)
+      in_file = input$tab2_file_to_upload
+      my_data = read.csv(in_file$datapath, stringsAsFactors = FALSE)
     })
     my_data
   })
 
-  output$tab2_data_table = renderRHandsontable({
-    input$tab2_load_file
+  output$tab2_new_loaded_table = renderRHandsontable({
+    input$tab2_load_file_button
     isolate({
-      req(input$tab2_file)
+      req(input$tab2_file_to_upload)
       df = 
         loadedCategorizedData() %>%
         rhandsontable(width = 1200, height = 900) %>%
@@ -106,7 +106,7 @@ output$tab1_sum_out_box = renderValueBox({
     })
   })
 
-  output$tab2_hot_table = renderRHandsontable({
+  output$tab2_modified_hot_table = renderRHandsontable({
     df = 
       modifiedData() %>%
       mutate(category = "") %>%
@@ -114,15 +114,15 @@ output$tab1_sum_out_box = renderValueBox({
       hot_cols(colWidths = 150)
   })
   
-  hotTable = reactive({
-    req(input$tab2_hot_table)
-    hot_to_r(input$tab2_hot_table)
+  hotCategorizedTable = reactive({
+    req(input$tab2_modified_hot_table)
+    hot_to_r(input$tab2_modified_hot_table)
   })
   
-  output$tab2_download = downloadHandler(
-    filename = function() {"categ_data.csv"},
+  output$tab2_download_button = downloadHandler(
+    filename = function() {"categorized_data.csv"},
     content = function(fname) {
-      write.csv(hotTable(), fname, row.names = FALSE)
+      write.csv(hotCategorizedTable(), fname, row.names = FALSE)
     }
   )
   
@@ -133,7 +133,7 @@ output$tab1_sum_out_box = renderValueBox({
     if(input$tab2_data_source == "Yes") {
       data = loadedCategorizedData()
     } else if(input$tab2_data_source == "No") {
-     data = hotTable()
+     data = hotCategorizedTable()
     }
     data
   })
