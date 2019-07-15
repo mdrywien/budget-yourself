@@ -140,7 +140,7 @@ output$tab1_sum_out_box = renderValueBox({
   
   output$tab3_main_table = DT::renderDataTable({
     df = groupDataByCat(categorizedData())
-    DT::datatable(df, options = list(pageLength = 10, scrollX = TRUE))
+    DT::datatable(df, options = list(pageLength = 8, scrollX = TRUE))
   })
   
   output$tab3_pie = renderPlotly({

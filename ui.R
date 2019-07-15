@@ -85,13 +85,13 @@ dashboardPage(
 # TAB3 - SPEND ------------------------------------------------------------
       tabItem(tabName = "spend",
               fluidRow(
-                column(width = 10,
-                  box(title = "Transactions by date", width = NULL, 
-                      DT::dataTableOutput("tab3_main_table"),
-                      plotlyOutput("tab3_pie", width = "600px")),
-                  box(title = "Spend by category", width = NULL, 
-                      plotlyOutput("tab3_line", height = "800px"))
-                )
+                  box(title = "Transactions by date", width = 5, height = "500px", 
+                      DT::dataTableOutput("tab3_main_table")),
+                  box(title = "Category share", plotlyOutput("tab3_pie"), width = 7, height = "500px")
+              ),
+              fluidRow(
+                box(title = "Spend by date and category", width = 12, height = "700px", 
+                    plotlyOutput("tab3_line", height = "600px"))
               )
       ),
 
